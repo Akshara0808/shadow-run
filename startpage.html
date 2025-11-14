@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <style>
+        body {
+            background-image: url("./assets/startpageBackground.jpg");
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            margin: 0;
+            height: 100vh;
+            color: rgb(255, 255, 255); 
+            font-family: Arial, sans-serif;
+            position: relative; 
+            overflow: scroll; 
+        }
+        .settings-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 14px;
+            color:white;
+            background-color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .settings-button:hover {
+            background-color: #333; 
+            transform: scale(1.05);
+        }
+
+        .button {
+            padding: 10px 20px; 
+            font-size: 50px; 
+            font-family: 'PixelFont', Arial, sans-serif; 
+            color: rgb(255, 255, 255);
+            background-color: rgba(0, 0, 0, 0.5); 
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            position: absolute; 
+        }
+        .button:hover {
+            background-color: rgba(0, 0, 0, 0.8); 
+            transform: scale(1.05);
+        }
+        .button:focus, .settings-button:focus {
+            outline: none;
+        }
+
+        .play-button {
+            left: 50%; 
+            top: 50%; 
+            transform: translate(-50%, -50%);
+            margin-top: 5cm; 
+        }
+
+        .quit-button {
+            left: 50%; 
+            top: calc(50% + 1.5cm);
+            transform: translate(-50%, -50%); 
+            margin-top: calc(5cm + 1cm); 
+        }
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: scroll; 
+            background-color: rgba(0, 0, 0, 0.4); 
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color:rgb(74, 71, 71);
+            border-radius: 5px;
+            margin: auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .modal-button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            color: white;
+            background-color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .modal-button:hover {
+            background-color: #333; 
+            transform: scale(1.05);
+        }
+
+        .modal-button:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <button class="settings-button" aria-label="Settings" onclick="showSettingsMenu()">Settings</button>
+
+    <button class="button play-button" aria-label="Play" onclick="goToDesignPage('play')">Play</button>
+    <button class="button quit-button" aria-label="Quit" onclick="showQuitConfirmation()">Quit</button>
+
+    <!-- Quit Modal -->
+    <div id="quitModal" class="modal">
+        <div class="modal-content">
+            <p>Do you want to exit the game?</p>
+            <button class="modal-button" onclick="quitGame()">Yes</button>
+            <button class="modal-button" onclick="closeModal('quitModal')">No</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <p>Settings Menu</p>
+            <button class="modal-button" onclick="closeModal('settingsModal')">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function goToDesignPage(action) {
+            if (action === 'play') {
+                window.location.href = 'theme.html';
+            }
+        }
+
+        function showQuitConfirmation() {
+            document.getElementById('quitModal').style.display = 'flex';
+        }
+
+        function quitGame() {
+            window.close(); 
+        }
+
+        function showSettingsMenu() {
+            document.getElementById('settingsModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function openSettingsPage() {
+            window.open('settings.html', '_blank'); 
+        }
+    </script>
+</body>
+</html>
