@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Dog Game</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Dog properties
+        let dogX = 50;
+        let dogY = canvas.height - 50;
+        let dogVelocityX = 0;
+        let dogVelocityY = 0;
+        const jumpVelocity = -10; // Fixed jump velocity
+        const dogWidth = 30;
+        const dogHeight = 30;
+
+        // Obstacle properties
+        const obstacleWidth = 50;
+        const obstacleHeight = 30;
+        const obstacles = [
+            { x: 200, y: canvas.height - obstacleHeight, color: 'red' },
+            { x: 400, y: canvas.height - obstacleHeight, color: 'blue' }
+        ];
+
+        // Background properties
+        let backgroundX = 0;
+        const backgroundSpeed = 1;
+
+        // Event listener for arrow key presses
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                dogVelocityX = -5; // Move left
+            } else if (e.key === 'ArrowRight') {
+                dogVelocityX = 5; // Move right
+            } else if (e.key === 'ArrowUp' && dogY === canvas.height - dogHeight) {
+                // Only allow jumping when dog is on the ground
+                dogVelocityY = jumpVelocity;
+            }
+        });
+            // Function to detect collision between dog and obstacles
+        function detectCollision() {
+         for (let i = 0; i < obstacles.length; i++) {
+        const obstacle = obstacles[i];
+        // Horizontal collision detection
+        if (dogX < obstacle.x + obstacleWidth &&
+            dogX + dogWidth > obstacle.x &&
+            dogY + dogHeight > obstacle.y) { // Allow passing above the obstacle
+            if (dogVelocityX > 0 && dogX + dogWidth - dogVelocityX <= obstacle.x) {
+                // Dog is moving right and hits the left side of the obstacle
+                dogX = obstacle.x - dogWidth;
+                dogVelocityX = 0;
+            } else if (dogVelocityX < 0 && dogX - dogVelocityX >= obstacle.x + obstacleWidth) {
+                // Dog is moving left and hits the right side of the obstacle
+                dogX = obstacle.x + obstacleWidth;
+                dogVelocityX = 0;
+            }
+        }
+
+        // Vertical collision detection (optional, if you want to prevent passing through from the top)
+        if (dogX < obstacle.x + obstacleWidth &&
+            dogX + dogWidth > obstacle.x &&
+            dogY < obstacle.y + obstacleHeight &&
+            dogY + dogHeight > obstacle.y) {
+            if (dogVelocityY > 0 && dogY + dogHeight - dogVelocityY <= obstacle.y) {
+                // Dog is falling and hits the top of the obstacle
+                dogY = obstacle.y - dogHeight;
+                dogVelocityY = 0;
+            }
+        }
+    }
+}
+    
+
+        // Game loop
+        function update() {
+            // Update dog position
+            dogX += dogVelocityX;
+            dogY += dogVelocityY;
+
+            // Simulate gravity
+            dogVelocityY += 0.5; // Adjust gravity as needed
+
+            // Detect collisions
+            detectCollision();
+
+            // Parallax background
+            backgroundX -= backgroundSpeed;
+            if (backgroundX <= -canvas.width) {
+                backgroundX = 0;
+            }
+
+            // Draw background
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'lightblue';
+            ctx.fillRect(backgroundX, 0, canvas.width, canvas.height);
+            ctx.fillRect(backgroundX + canvas.width, 0, canvas.width, canvas.height);
+
+            // Draw obstacles
+            for (let i = 0; i < obstacles.length; i++) {
+                ctx.fillStyle = obstacles[i].color;
+                ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacleWidth, obstacleHeight);
+            }
+
+            // Draw dog
+            ctx.fillStyle = 'brown';
+            ctx.fillRect(dogX, dogY, dogWidth, dogHeight);
+
+            // Keep dog within canvas bounds
+            if (dogY > canvas.height - dogHeight) {
+                dogY = canvas.height - dogHeight;
+                dogVelocityY = 0;
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // Start the game loop
+        requestAnimationFrame(update);
+    </script>
+</body>
+</html>
